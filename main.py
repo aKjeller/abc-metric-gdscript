@@ -26,16 +26,16 @@ def calculate_abc_metric(path, data=None):
 # Add the occurrence of an assignment operator (exclude constant declarations and default parameter assignments) (=, *=, /=, %=, +=, -=, <<=, >>=, &=, !=, ^=, >>>=).
 # Add the occurrence of an increment or a decrement operator (prefix or postfix) (++, --).
 def find_a(code):
-    pattern = re.compile(r'\+\+|\-\-|\+\=|\-\=|\=|\*\=|\/\=|\%\=|\<\<\=|\>\>\=|\&\=|\!\=|\^\=|\>\>\>\=')
-    res = re.findall(pattern, code)
+    pattern_a = re.compile(r'\+\+|\-\-|\+\=|\-\=|\=|\*\=|\/\=|\%\=|\<\<\=|\>\>\=|\&\=|\!\=|\^\=|\>\>\>\=')
+    res = re.findall(pattern_a, code)
     return len(res)
 
 # TODO: 
 # Add the occurrence of a function call or a class method call.
 # Add the occurrence of a ‘new’ operator. (GDscript has .new() and .instance() instead of new? (So they are function calls?))
 def find_b(code):
-    pattern = re.compile(r'.new\(\)|.instance\(\)')
-    res = re.findall(pattern, code)
+    pattern_b = re.compile(r'.new\(\)|.instance\(\)')
+    res = re.findall(pattern_b, code)
     return len(res)
 
 # TODO: 

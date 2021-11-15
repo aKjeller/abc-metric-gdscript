@@ -23,10 +23,13 @@ def calculate_abc_metric(path, data=None):
     return math.sqrt(math.pow(a, 2) + math.pow(b, 2) + math.pow(c, 2))
 
 # TODO: 
-# Add the occurrence of an assignment operator (exclude constant declarations and default parameter assignments) (=, *=, /=, %=, +=, -=, <<=, >>=, &=, !=, ^=, >>>=).
-# Add the occurrence of an increment or a decrement operator (prefix or postfix) (++, --).
+# Exclude constant declarations and default parameter assignments (is "onready var close_btn: Button = $Close" constant declaration?)
+# Check for missmatches
 def find_a(code):
-    return 0
+    # Pattern to find: = += -= *= /= %= &= |= <<= >>= ++ --
+    pattern = re.compile(r' = | \+= | -= | \*= | /= | %= | &= | \|= | <<= | >>= |\+\+|--')
+    res = re.findall(pattern, code)
+    return len(res)
 
 # TODO: 
 # Add the occurrence of a function call or a class method call.
@@ -37,9 +40,10 @@ def find_b(code):
 # TODO: 
 # Add the occurrence of the GDscript equivalent of thefollowing keywords (‘else’, ‘case’, ‘default’, ‘?’, ‘try’, ‘catch’). 
 # Add the occurrence of a unary conditional operator.
+# Check for missmatches
 def find_c(code):
     # Pattern to find: < > == != >= <=
-    pattern = re.compile(r' < | > | == | != | >= | <= ')
+    pattern = re.compile(r' < | > | == | != | >= | <= ') # Add 'else:' here?
     res = re.findall(pattern, code)
     return len(res)
 
@@ -59,4 +63,4 @@ def read_file(file_path):
 if __name__ == '__main__':
     response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/MainWindow.gd')
     abc = calculate_abc_metric('', response.text)
-    print(abc)
+    print('ABC: {}'.format(round(abc, 1)))

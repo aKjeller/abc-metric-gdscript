@@ -38,14 +38,27 @@ def find_b(code):
     return 0
 
 # TODO: 
-# Add the occurrence of the GDscript equivalent of thefollowing keywords (‘else’, ‘case’, ‘default’, ‘?’, ‘try’, ‘catch’). 
+# Add the occurrence of the GDscript equivalent of thefollowing keywords (‘?’, ‘try’, ‘catch’). 
 # Add the occurrence of a unary conditional operator.
 # Check for missmatches
 def find_c(code):
-    # Pattern to find: < > == != >= <=
-    pattern = re.compile(r' < | > | == | != | >= | <= ') # Add 'else:' here?
+    c = 0
+
+    # Pattern to find: < > == != >= <= else:
+    pattern = re.compile(r' < | > | == | != | >= | <= |else:') # Add 'else:' here?
     res = re.findall(pattern, code)
-    return len(res)
+    c += len(res)
+
+    # Pattern to find switch case blocks
+    pattern = re.compile(r'((.*)match(.|\n\2\t)*)')
+    res = re.findall(pattern, code)
+    if len(res) > 0:
+        for r in res:
+            pattern = re.compile(r'\n{}\t(?!\t)'.format(r[1]))
+            res = re.findall(pattern, r[0])
+            c += len(res)
+
+    return c
 
 # Read file at file_path and return contents as a string
 def read_file(file_path):
@@ -61,6 +74,8 @@ def read_file(file_path):
 # TODO: 
 # Add arguments i.e. path
 if __name__ == '__main__':
-    response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/MainWindow.gd')
+    # response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/MainWindow.gd')
+    response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/FileTree.gd') # Contains a match statement
     abc = calculate_abc_metric('', response.text)
     print('ABC: {}'.format(round(abc, 1)))
+

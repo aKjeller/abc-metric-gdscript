@@ -32,10 +32,24 @@ def find_a(code):
     return len(res)
 
 # TODO: 
-# Add the occurrence of a function call or a class method call.
-# Add the occurrence of a ‘new’ operator. (GDscript has .new() and .instance() instead of new? (So they are function calls?))
+# Check for missmatches
 def find_b(code):
-    return 0
+    b = 0
+
+    # Pattern to find all lines containing a function call
+    pattern = re.compile(r'.*\(.*(?!\n)')
+    res = re.findall(pattern, code)
+    if len(res) > 0:
+        for r in res:
+            pattern = re.compile(r'\w\(') # All function calls
+            res = re.findall(pattern, r)
+            if '#' not in r: # Remove comments
+                b += len(res)
+
+                pattern = re.compile(r'func|while|match') # Remove: func, while, match
+                res = re.findall(pattern, r)
+                b -= len(res)
+    return b
 
 # TODO: 
 # Add the occurrence of the GDscript equivalent of thefollowing keywords (‘?’, ‘try’, ‘catch’). 

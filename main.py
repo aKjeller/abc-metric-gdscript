@@ -2,6 +2,7 @@ import os
 import math
 import re
 import requests
+import glob
 
 # TODO: 
 # Make it work for folders
@@ -89,7 +90,11 @@ def read_file(file_path):
 # Add arguments i.e. path
 if __name__ == '__main__':
     # response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/MainWindow.gd')
-    response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/FileTree.gd') # Contains a match statement
-    abc = calculate_abc_metric('', response.text)
-    print('ABC: {}'.format(round(abc, 1)))
-
+    #response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/FileTree.gd') # Contains a match statement
+    #abc = calculate_abc_metric('', response.text)
+    #print('ABC: {}'.format(round(abc, 1)))
+    path = 'C:\SEP\smce-gd'
+    filelist = glob.glob(path + '/**/*.gd', recursive=True)
+    for x in range(len(filelist)):
+        abc = calculate_abc_metric('', filelist[x])
+        print(filelist[x], abc)

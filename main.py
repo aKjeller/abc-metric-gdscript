@@ -2,22 +2,16 @@ import os
 import math
 import re
 import requests
+import glob
 
 # TODO: 
 # Make it work for folders
-def calculate_abc_metric(path, data=None):
-    if data is None:
-        data = read_file(path)
+def calculate_abc_metric(path):
+    data = read_file(path)
     
     a = find_a(data)
     b = find_b(data)
     c = find_c(data)
-
-    # Debug
-    print('A: {}'.format(a))
-    print('B: {}'.format(b))
-    print('C: {}'.format(c))
-    print()
 
     # Return sqrt( a^2 + b^2 + c^2 )
     return math.sqrt(math.pow(a, 2) + math.pow(b, 2) + math.pow(c, 2))
@@ -88,8 +82,8 @@ def read_file(file_path):
 # TODO: 
 # Add arguments i.e. path
 if __name__ == '__main__':
-    # response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/MainWindow.gd')
-    response = requests.get('https://raw.githubusercontent.com/aKjeller/group-10-smce-gd/code_editor/project/src/ui/code_editor/FileTree.gd') # Contains a match statement
-    abc = calculate_abc_metric('', response.text)
-    print('ABC: {}'.format(round(abc, 1)))
-
+    path = 'C:\\Users\\Kjeller\\Documents\\dev\\SMCE\\group-10-smce-gd\\project'
+    filelist = glob.glob(path + '/**/*.gd', recursive=True)
+    for x in range(len(filelist)):
+        abc = calculate_abc_metric(filelist[x])
+        print(round(abc, 0), '\t' , filelist[x])

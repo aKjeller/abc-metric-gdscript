@@ -3,6 +3,7 @@ import math
 import re
 import requests
 import glob
+import sys
 
 # TODO: 
 # Make it work for folders
@@ -82,8 +83,11 @@ def read_file(file_path):
 # TODO: 
 # Add arguments i.e. path
 if __name__ == '__main__':
-    path = 'C:\\Users\\Kjeller\\Documents\\dev\\SMCE\\group-10-smce-gd\\project'
-    filelist = glob.glob(path + '/**/*.gd', recursive=True)
-    for x in range(len(filelist)):
-        abc = calculate_abc_metric(filelist[x])
-        print(round(abc, 0), '\t' , filelist[x])
+    folderpath = sys.argv[1]
+    if(os.path.exists(folderpath)):
+        filelist = glob.glob(folderpath + '/**/*.gd', recursive=True)
+        for x in range(len(filelist)):
+            abc = calculate_abc_metric(filelist[x])
+            print(round(abc, 0), '\t' , filelist[x])
+    else:
+        print('Incorrect folder path, Folder not found')

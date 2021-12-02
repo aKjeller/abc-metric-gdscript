@@ -1,33 +1,54 @@
 import os
 import math
 import re
-import requests
 import glob
 import sys
 
-# TODO: 
-# Make it work for folders
-def calculate_abc_metric(path):
-    data = read_file(path)
-    
-    a = find_a(data)
-    b = find_b(data)
-    c = find_c(data)
+def main():
+    folderpath = sys.argv[1]
+    if(os.path.exists(folderpath)):
+        calculate_abc_metric(folderpath)
+    else:
+        print('Incorrect folder path, Folder not found')
 
-    # Return sqrt( a^2 + b^2 + c^2 )
-    return math.sqrt(math.pow(a, 2) + math.pow(b, 2) + math.pow(c, 2))
+def calculate_abc_metric(folderpath):
+    filelist = glob.glob(folderpath + '/**/*.gd', recursive=True)
 
-# TODO: 
-# Exclude constant declarations and default parameter assignments (is "onready var close_btn: Button = $Close" constant declaration?)
-# Check for missmatches
+    total_a = 0
+    total_b = 0
+    total_c = 0
+
+    res_list = []
+
+    for file in filelist:
+        data = read_file(file)
+
+        a = find_a(data)
+        b = find_b(data)
+        c = find_c(data)
+
+        total_a += a
+        total_b += b
+        total_c += c
+
+        res_list.append((math.sqrt(math.pow(a, 2) + math.pow(b, 2) + math.pow(c, 2)), file))
+
+    res_list.sort(reverse=True)
+
+    print('############################################')
+    print('Total ABC score for the whole project: ')
+    print(round(math.sqrt(math.pow(total_a, 2) + math.pow(total_b, 2) + math.pow(total_c, 2)), 1))
+    print('############################################')
+    print('ABC score for individual files:')
+    for res in res_list:
+        print(str(round(res[0], 1)) + "\t" + res[1])
+
 def find_a(code):
     # Pattern to find: = += -= *= /= %= &= |= <<= >>= ++ --
     pattern = re.compile(r' = | \+= | -= | \*= | /= | %= | &= | \|= | <<= | >>= |\+\+|--')
     res = re.findall(pattern, code)
     return len(res)
 
-# TODO: 
-# Check for missmatches
 def find_b(code):
     b = 0
 
@@ -80,14 +101,4 @@ def read_file(file_path):
         print("No file found at path")
         return None
 
-# TODO: 
-# Add arguments i.e. path
-if __name__ == '__main__':
-    folderpath = sys.argv[1]
-    if(os.path.exists(folderpath)):
-        filelist = glob.glob(folderpath + '/**/*.gd', recursive=True)
-        for x in range(len(filelist)):
-            abc = calculate_abc_metric(filelist[x])
-            print(round(abc, 0), '\t' , filelist[x])
-    else:
-        print('Incorrect folder path, Folder not found')
+main()
